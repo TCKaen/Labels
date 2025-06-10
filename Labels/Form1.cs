@@ -1,7 +1,8 @@
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
 using System.Diagnostics;
-using System.IO;
+using Velopack;
+using Velopack.Sources;
 
 namespace Labels
 {
@@ -61,7 +62,6 @@ namespace Labels
                     return;
                 }
 
-                // Split input by commas, newlines, or spaces
                 var separators = new[] { ',', '\n', '\r', ' ' };
                 string[] inputSerials = txtSerials.Text.Split(separators, StringSplitOptions.RemoveEmptyEntries);
 
@@ -84,7 +84,6 @@ namespace Labels
                 txtSerials.Clear();
             }
         }
-
 
         private void btnGenerate_Click(object sender, EventArgs e)
         {
@@ -112,13 +111,10 @@ namespace Labels
             }
 
             string selectedSerial = listSerials.SelectedItem.ToString();
-
-            // Remove from the visual list
             listSerials.Items.Remove(selectedSerial);
-
-            // Remove from the internal data list
             serials.Remove(selectedSerial);
         }
+
         private void GeneratePdfLabels(List<string> serials, string productName, string orderNumber, string cwNum, string addInfo)
         {
             int labelsPerRow = 2;
@@ -187,10 +183,8 @@ namespace Labels
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
-            // Enable or disable the txtSerials input based on the checkbox state
             txtSerials.Enabled = !chkNoSerial.Checked;
 
-            // Optionally clear the textbox when disabling
             if (chkNoSerial.Checked)
             {
                 txtSerials.Clear();
@@ -224,11 +218,31 @@ namespace Labels
                 }
             }
         }
+
         private void addInfo_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+        private static async Task UpdateMyApp()
+        {
+            var accessToken = "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";
+            var mgr = new UpdateManager(new GithubSource("https://github.com/TCKaen/Labels", accessToken, false, null));
+
+            // check for new version
+            var newVersion = await mgr.CheckForUpdatesAsync();
+            if (newVersion == null)
+                return; // no update available
+
+            // download new version
+            await mgr.DownloadUpdatesAsync(newVersion);
+
+            // install new version and restart app
+            mgr.ApplyUpdatesAndRestart(newVersion);
+        }
+
+        private void btnUpdate_Click(object sender, EventArgs e)
         {
 
         }
     }
 }
-
-

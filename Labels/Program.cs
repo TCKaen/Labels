@@ -1,5 +1,3 @@
-using Velopack;
-
 namespace Labels
 {
     internal static class Program
@@ -12,7 +10,6 @@ namespace Labels
         {
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
-            VelopackApp.Build().Run();
             ApplicationConfiguration.Initialize();
             Application.Run(new Form1());
         }

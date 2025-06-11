@@ -226,7 +226,7 @@ namespace Labels
         private static async Task UpdateMyApp()
         {
             var accessToken = "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";
-            var mgr = new UpdateManager(new GithubSource("https://github.com/TCKaen/Labels", accessToken, false, IFileDownloader));
+            var mgr = new UpdateManager(new GithubSource("https://github.com/TCKaen/Labels", accessToken, false, null));
 
             // check for new version
             var newVersion = await mgr.CheckForUpdatesAsync();
